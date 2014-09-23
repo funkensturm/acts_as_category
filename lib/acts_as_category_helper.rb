@@ -1,14 +1,16 @@
 
 # Gosh, this poor helper needs some major refactoring :)
 
+require 'memoist'
+
 module ActsAsCategoryHelper
-  
-  extend ActiveSupport::Memoizable
-  
+
+  extend Memoist
+
   # --------------------------
   # Select box with categories
   # --------------------------
-  
+
   def aac_select(roots, options = {})
     config = {:id => 'category_select', :name => 'category', :class => 'category_select', :selected => '', :parents_nil => false, :option_all => false, :option_nil => false}
     config.update(options) if options.is_a?(Hash)
@@ -19,7 +21,7 @@ module ActsAsCategoryHelper
     result += '</select>'
   end
   memoize :aac_select
-  
+
   def aac_select_option(category, selected = '', parents_have_no_id = false)
     id = (!category.children.empty? and parents_have_no_id) ? '' : category.id
     result = "<option value='#{id}' #{"selected='selected'" if category.id == selected }>"
@@ -32,18 +34,18 @@ module ActsAsCategoryHelper
     result
   end
   private :aac_select_option
-  
+
   # -----------------
   # Sidebar menu tree
   # -----------------
-  
+
   def aac_tree(roots)
     result = "<ul class='tree_root'>"
     roots.each { |root| result += aac_tree_category(root) }
     result += '</ul>'
   end
   memoize :aac_tree
-  
+
   def aac_tree_category(category)
     result = "<li>" + link_to(h(category.name), category) + "</li>"
     unless category.children.empty? then
@@ -54,12 +56,12 @@ module ActsAsCategoryHelper
     result
   end
   private :aac_tree_category
-  
-  
+
+
   # --------------------------
   # Rights administration tree
   # --------------------------
-  
+
   def aac_rights_tree(all_categories, options = {})
     config = {:matrix => false, :url => {}, :update => 'tree_rights_remote', :deactivate_links => false}
     config.update(options) if options.is_a?(Hash)
@@ -70,7 +72,7 @@ module ActsAsCategoryHelper
     result += '</ul>'
     result += '</span>'
   end
-  
+
   def aac_rights_category(category, all_categories, config)
     children = all_categories.map {|c| c if c.parent == category}.compact
     result = '&nbsp;' * category.ancestors_count * 3
@@ -95,11 +97,11 @@ module ActsAsCategoryHelper
     result
   end
   private :aac_rights_category
-  
+
   # ----------------------------
   # Position administration tree
   # ----------------------------
-    
+
   def aac_sortable_tree(model, options = {})
     raise "Model '#{model.to_s}' does not acts_as_category" unless model.respond_to?(:acts_as_category)
     config = {:url => {:controller => :funkenadmin, :action => :categories}, :column => 'name', :edit_url => {:controller => :funkenadmin, :action => :categories}, :edit_link => '-o-'}

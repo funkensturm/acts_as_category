@@ -2,11 +2,11 @@
 # Test for acts_as_category
 #
 #  There are several ways to execute this test:
-#  
+#
 #  1. Open this file on a Mac in TextMate and press  ⌘R
 #  2. Go to "vendor/plugins/acts_as_category/test" and run "rake test" in a terminal window
 #  3. Run "rake test:plugins" in a terminal window to execute tests of all plugins
-#  
+#
 #  For more infos see http://github.com/funkensturm/acts_as_category
 # –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
@@ -34,12 +34,12 @@ class ScopedCategory < ActiveRecord::Base
                    :order_by => 'my_position'
 end
 
-class ScopedCategoryTest < Test::Unit::TestCase
-  
+class ScopedCategoryTest < MiniTest::Unit::TestCase
+
   # Test category trees with scopes:
   #
   #  |––––––––––––––– Catalogue @c1 –––––––––––––––|––––––––––––––– Catalogue @c2 –––––––––––––––|–– Without catalogue ––|
-  # 
+  #
   #    c1n1               c1n2              c1n3     c2n1               c2n2              c2n3      r1               r2
   #     \_ c1n11           \_ c1n21                   \_ c2n11           \_ c2n21                    \_ r11
   #          \_ c1n111     \    \_ c1n211                  \_ c2n111     \    \_ c2n211                   \_ r111
@@ -103,7 +103,7 @@ class ScopedCategoryTest < Test::Unit::TestCase
   def teardown
     teardown_db
   end
-  
+
   def check_cache # This is merely a method used by certain tests
     ScopedCategory.find(:all).each { |c|
       # Note that "children_count" is a built-in Rails functionality and must not be tested here
@@ -111,11 +111,11 @@ class ScopedCategoryTest < Test::Unit::TestCase
       assert_equal c.descendants.size, c.my_descendants_count
     }
   end
-  
+
   def test_cache_columns
     check_cache
   end
-  
+
   def test_siblings_of_roots
     assert_equal [@c1n2, @c1n3], @c1n1.siblings
     assert_equal [@c2n2, @c2n3], @c2n1.siblings
@@ -124,22 +124,22 @@ class ScopedCategoryTest < Test::Unit::TestCase
     assert_equal [@c2n1, @c2n2, @c2n3], @c2n2.self_and_siblings
     assert_equal [@n1, @n2], @n1.self_and_siblings
   end
-  
+
   def test_roots_and_forced_roots_within_association
     assert_equal [@c1n1, @c1n2, @c1n3], @c1.scoped_categories.roots
     assert_equal [@c2n1, @c2n2, @c2n3], @c2.scoped_categories.roots
     assert_equal [@c1n1, @c1n2, @c1n3], @c1.scoped_categories.roots!
     assert_equal [@c2n1, @c2n2, @c2n3], @c2.scoped_categories.roots!
   end
-  
+
   def test_roots_within_association_and_permissions
     assert @c1n2.update_attribute 'my_hidden', true
     assert_equal [@c1n1, @c1n3], @c1.scoped_categories.roots
   end
-  
+
   def test_forced_roots_via_association_and_permissions
     assert @c1n2.update_attribute 'my_hidden', true
     assert_equal [@c1n1, @c1n2, @c1n3], @c1.scoped_categories.roots!
   end
-  
+
 end

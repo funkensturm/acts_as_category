@@ -180,7 +180,7 @@ module ActsAsCategory
             end
 
             # This will actually include the InstanceMethods to your model
-            include ActiveRecord::Acts::Category::InstanceMethods
+            include ActsAsCategory::InstanceMethods
 
             # Generating the scope_condition instance method
             #{scope_condition_method}
