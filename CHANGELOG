@@ -1,8 +1,12 @@
+*2.0 beta (Sep 23 2014)*
+
+Gemify acts_as_category
+
 *2.0 alpha*
 
 Watch out, new version is approaching to support scopes :) Refactored class and test methods.
 
-*1.0 (February 15st, 2009)*
+*1.0 (February 15th, 2009)*
 
 * Positions of complete tree will be rewritten after every category save. This prevents messed up orders which caused the sorted_tree to not work.
 
