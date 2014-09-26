@@ -72,7 +72,7 @@ setup_db # Because the plugin needs an existing table before initialization (e.g
 # –––––––––––––––––––
 
 $:.unshift File.join plugin_path, 'lib' # make "lib" known to "require"
-require 'acts_as_category'
-require 'acts_as_category_content'
-require 'acts_as_category_helper'
-require File.join plugin_path, 'init' # Initialize Plugin
+require 'acts_as_category/acts_as_category'
+require 'acts_as_category/acts_as_category_content'
+require 'acts_as_category/acts_as_category_helper'
+require File.join plugin_path, 'lib/acts_as_category' # Initialize Plugin
