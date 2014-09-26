@@ -28,11 +28,11 @@ module ActsAsCategoryHelper
     result = "<select id='#{config[:id]}' name='#{config[:name].to_s}' class='#{config[:class]}'>"
 
     if config[:option_nil]
-      result << "<option value=''    #{"selected='selected'" if config[:selected] == '' }   >#{config[:option_nil]}</option>"
+      result << "<option value='' #{"selected='selected'" if config[:selected] == '' }> #{config[:option_nil]}</option>"
     end
 
     if config[:option_all]
-      result << "<option value='all' #{"selected='selected'" if config[:selected] == 'all' }>#{config[:option_all]}</option>"
+      result << "<option value='all' #{"selected='selected'" if config[:selected] == 'all' }> #{config[:option_all]}</option>"
     end
 
     roots.each { |root| result += aac_select_option(root, config[:selected], config[:parents_nil]) }
@@ -45,7 +45,7 @@ module ActsAsCategoryHelper
     id = (!category.children.empty? and parents_have_no_id) ? '' : category.id
 
     result = "<option value='#{id}' #{"selected='selected'" if category.id == selected }>"
-    result << '&nbsp;' * 4 * category.ancestors.size
+    result << '&nbsp;' * 2 * category.ancestors.size
     result << h(category.name)
     result << '</option>'
 
@@ -70,16 +70,16 @@ module ActsAsCategoryHelper
 
 
   def aac_tree_category(category)
-    result = '  ' * category.ancestors_count # vanity indentation
+    result = '  ' * category.ancestors.count # vanity indentation
     result << "<ul>\n"
-    result << '  ' * (category.ancestors_count + 1)
+    result << '  ' * (category.ancestors.count + 1)
     result << '<li>' << link_to(h(category.name), category)
-    result << '  ' * (category.ancestors_count + 1)
+    result << '  ' * (category.ancestors.count + 1)
     result << "</li>\n"
     unless category.children.empty?
       category.children.each { |child| result << aac_tree_category(child) }
     end
-    result << '  ' * category.ancestors_count
+    result << '  ' * category.ancestors.count
     result << "</ul>\n"
   end
   private :aac_tree_category
@@ -119,15 +119,12 @@ module ActsAsCategoryHelper
     if !category.hidden and category.permitted?
       result << "<span class='right_normal'>#{category.name}</span>"
     elsif category.permitted?
-
       if config[:deactivate_links]
         result << "<span style='color: #0b0;'>#{category.name}</span>"
       else
         result << link_to_remote(category.name, {:update => config[:update], :url => config[:url].update({:deny => category.id, :allow => nil})}, {:style => style})
       end
-
     else
-      style = 'color: #c00;'
       if category.hidden
         if result << config[:deactivate_links] then
           "<span style='color: #0b0;'>#{category.name}</span>"
@@ -176,7 +173,7 @@ module ActsAsCategoryHelper
 
     result = ''
     result << "<ul id=\"aac_sortable_tree_#{parent_id}\">\n" if firstitem
-    result << "<li id=\"category_#{category.id}\">#{category.read_attribute(column)}"
+    result << "<li id=\"category_#{category.id}\"> #{category.read_attribute(column)}"
     result << ' ' + link_to(edit_link, edit_url.update({:id => category.id})) unless edit_url.blank?
     result << category.children.empty? ? "</li>\n" : "\n"
 
