@@ -25,7 +25,7 @@ module ActsAsCategoryContent
     #
     # * <tt>category</tt> - specifies the model name of the category (default: +category+)
     # * <tt>counter_cache</tt> - specifies the counter_cache to use (default: +pictures_count+)
-    def acts_as_category_content(category="category", options = {})
+    def acts_as_category_content(category='category', options = {})
 
       # Load parameters whenever acts_as_category is called
       configuration = { :counter_cache => "#{self.name.underscore}_count" }

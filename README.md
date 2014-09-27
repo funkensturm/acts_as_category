@@ -1,51 +1,62 @@
-Introduction
-============
+#ActsAsCategory
+[![Build Status](https://secure.travis-ci.org/mbrookes/acts_as_category.svg?branch=master)](http://travis-ci.org/mbrookes/acts\_as\_tree)
+[![Gem Version](https://badge.fury.io/rb/acts_as_category.svg)](http://badge.fury.io/rb/acts\_as\_category)
 
       acts_as_category (Version 2.0 beta)
 
-Let me explain to you what I mean by **acts\_as\_category**, which is
-yet another acts\_as plugin for Ruby on Rails ActiveRecord models.
-Copyright is 2014 by
-<a href="http://www.funkensturm.com">www.funkensturm.com</a>, released
-under the *MIT/X11 license*, which is free for all to do whatever you
-want with it.
+**acts\_as\_category**, is an acts\_as plugin for Ruby on Rails ActiveRecord models
+in the style of acts\_as\_tree, but with a number of additional features, and several convenient view helpers.
 
-### acts\_as\_tree provides functionality for trees, but lacks some things:
 
--   It has no descendants method or things like `ancestors_ids`
--   It doesn’t validate `parent_id` whatsoever, which means that you can
-    make a category a parent of itself, etc.
--   It has no caching for ancestors and descendants (you need that to
-    output trees using `<ul>` and `<li>` efficiently)
--   It won’t help if you want certain users to see only certain nodes
--   There is no scoping, thus `root.siblings` will return **all** roots,
-    instead of this users’ roots only.
+## Example
 
-### acts\_as\_list is maybe not exactly what I want either:
+```ruby
+class Category < ActiveRecord::Base
+  acts_as_category
+end
 
--   It also has no validation or features to hide particular entries
--   It doesn’t support a script.aculo.us sortable\_list to reorder the
-    tree
--   It has more than you might need, providing all these
-    *move\_just\_a\_little\_bit\_higher* methods
--   Last but not least, it won’t work together with *acts\_as\_tree*
-    unless you hack around a lot with the scope code
+root      = Category.create(name: 'Root')
+child1    = Category.create(name: 'Child 1', parent_id: root.id)
+child2    = Category.create(name: 'Child 2', parent_id: root.id)
+subchild1 = Category.create(name: 'Subchild 1', parent_id: child1.id)
+subchild2 = Category.create(name: 'Subchild 2', parent_id: child1.id)
 
-### So I came up with acts\_as\_category, and this is what it does:
+root.parent                 # => nil
+child1.parent               # => root
+
+root.children               # => [child1, child2]
+root.children_count         # => 2
+
+root.descendants            # => [child1, child2, subchild1, subchild2]
+root.descendants_count      # => 4
+
+subchild2.ancestors         # => [child1, root]
+subchild2.ancestors_count   # => 2
+
+root.children.first.children.first # => subchild1
+```
+
+(Note that the _counts are cached in the database so, unlike their .count equivalents,
+do not need to be calculated at run-time with multiple database calls.
+
+
+##Features
+
+Existing solutions have various shortcomings, so acts\_as\_category aims to improve on those. This is what it offers:
 
 -   It provides a structure for infinite categories and their
     subcategories (similar to acts\_as\_tree)
 -   Each user can have his own set of category trees using the
     `:scope` feature
 -   It validates that no category will be the parent of its own
-    descendant and all other variations of these foreign key things
+    descendant and all other variations of this
 -   You can define which hidden categories should still be permitted to
     the current user (through a simple class variable, thus it can
     easily be set per user)
 -   There is a variety of instance methods such as `ancestors`,
     `descendants`, `descendants_ids`, `root?`, etc.
 -   It has view helpers to create menus, select boxes, drag and drop
-    ajax lists, etc. (they need refactorization, though)
+    ajax lists, etc.
 -   It optionally provides sorting by a position column per hierarchy
     level, including administration methods that take parameters from
     the helpers
@@ -55,51 +66,38 @@ want with it.
     learn from it or easily make changes
 -   I18n localization for individual error messages
 -   A full unit test comes along with it
--   As you can see in the test: All options (e.g. database field names)
+-   All options (e.g. database field names)
     highly configurable via a simple hash
 
-### What can acts\_as\_category NOT do?
+What can acts\_as\_category not do?
 
--   You can’t simply “turn off” the caching feature to speed up your
-    application. If you really want to make this thing more efficient
-    than it already is, `memoize` each critical function (it work’s
-    fine, since I’m using it myself, but the unit tests will fail
-    whenever I use memoize, that’s why it’s not published. Update: maybe
-    I should double-check this again, maybe it works by now).
+-   You can’t simply “turn off” the caching
 -   ActiveRecord’s “find” method won’t respect the hidden categories
-    feature (but a somewhat alternative method called `get` is provided)
+    feature (but an alternative method called `get` is provided)
 -   `update` and `update_attributes` must not be used to change the
     parent\_id, because there is no validation callback
--   It can’t make you a coffee
+-   It can’t make you a coffee :)
 
-### Demonstration
 
-Find a out-of-the-box demo application at
-<a href="http://github.com/funkensturm/funkengallery_demo">www.github.com/funkensturm/funkengallery\_demo</a>
-(note that this demo is using version `1.0`, but you get the idea).
+## Requirements
 
-### Requirements
+-   `Rails 3.x` (note: there are currently deprecation warnings with Rails 3.2, but this does not affect functionality)
 
--   `Rails 2.3.5` or higher (maybe lower, as well :)
 
-### Installation
+## Installation
 
-Just copy the **acts\_as\_category** directory into `vendor/plugins` in
+Add 'gem **acts\_as\_category**' to the Gemfile in
 your Rails application.
 
-To generate **HTML documentation** for all your plugins, run
-`rake doc:plugins`.\
-To generate it just for this plugin, go to
-`vendor/plugins/acts_as_category` and run `rake rdoc`.
+'bundle install`
 
 To run the **Unit Test** that comes with this plugin, please read the
-instructions in `vendor/plugins/acts_as_category/test/category_test.rb`.
+instructions in `acts_as_category/test/category_test.rb`.
 
-Documentation
-=============
 
-Including acts\_as\_category in your model
-------------------------------------------
+##Usage
+
+###Including acts\_as\_category in your model
 
 First of all you need a database table which looks something like this.
 Of course you can add arbitrary fields like `name`, `description`, etc.
@@ -166,8 +164,8 @@ I.e. `Category.root.first.children` will **not** respect the scope, but
 different scopes, whereas the children or a category will assumably have
 the same scope).
 
-Including acts\_as\_category\_content in your model
----------------------------------------------------
+
+###Including acts\_as\_category\_content in your model
 
 `acts_as_category` provides a function called `.permitted?` to find out
 whether a category is visible according to the current user permissions.
@@ -188,8 +186,8 @@ the
 `vendor/plugins/acts_as_category/lib/active_record/acts/category_content.rb`
 file to change this.
 
-Tutorial
---------
+
+## Tutorial
 
 If everything is set up, you can actually use the plugin. Let’s say you
 have trees like this and your model is called **Category**.
@@ -231,8 +229,8 @@ RDoc.
       child1.siblings               # Returns an empty array [], because it has no siblings
       subchild1.self_and_siblings   # Returns an array [subchild1, subchild2], just like siblings, only with itself as well
 
-Usage with permissions
-----------------------
+
+### Usage with permissions
 
 Let’s bring **permissions** into the game. It let’s you show categories
 for certain users, even though the categories might be flagged “hidden”.
@@ -297,8 +295,8 @@ Please have a look at the comments for each function and the unit test
 to see, which method respects permissions and which one doesn’t (e.g.
 ancestors).
 
-Scopes
-------
+
+###Scopes
 
 If you are using something, which `has_many` categories, like so:
 
@@ -319,23 +317,7 @@ You get the idea. Please notice, that it is assumed that every tree is
 in one scope anyway! So `children` has nothing to do with scope, it
 simply returns the children.
 
-FAQ
----
-
-**Why is *find* not respecting hidden?**
-
-I didn’t feel comfortable overwriting the find method for Categories and
-it is not really needed.
-
-**Why are `ancestors`, `ancestors_ids` and `self.parent` not respecting
-hidden/permissions?**
-
-Because the whole idea of hidden is to exclude descendants of an hidden
-Category as well, thus the ancestors of a category you can access anyway
-are never going to be hidden.
-
-Add AJAX positioning for ordering
----------------------------------
+#Add AJAX positioning for ordering
 
 **WARNING:** This is not tested on scopes yet! If you
 `has_many :categories` you might not be able to use this.
@@ -351,7 +333,7 @@ this be done by the sortable\_category helper and the
 Category.update\_positions(params) method like so:
 
 In your layout, make sure that you have all the JavaScripts included,
-that will allow drag and drop with script.aculo.us, etc. For the
+that will allow drag and drop with JQuery, etc. For the
 beginning, let’s just add all:
 
       <%= javascript_include_tag :all %>
@@ -375,40 +357,30 @@ like this:
       <%= aac_sortable_tree(Category, {:action => :update_positions}) %>
       <%= aac_sortable_tree(Category, {:controller => :mycontroller, :action => :update_positions}) %>
 
-Ask questions and have fun!
----------------------------
 
-Feel free to add your comments and don’t forget about the
-<a href="http://github.com/funkensturm/funkengallery_demo">demo
-application</a>.
+##FAQ
 
+**Why is *find* not respecting hidden?**
 
-# ActsAsCategory
+I didn’t feel comfortable overwriting the find method for Categories and
+it is not really needed.
 
-TODO: Write a gem description
+**Why are `ancestors`, `ancestors_ids` and `self.parent` not respecting
+hidden/permissions?**
 
-## Installation
+Because the whole idea of hidden is to exclude descendants of an hidden
+Category as well, thus the ancestors of a category you can access anyway
+are never going to be hidden.
 
-Add this line to your application's Gemfile:
-
-    gem 'acts_as_category'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install acts_as_category
-
-## Usage
-
-TODO: Write usage instructions here
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/acts_as_category/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+Pull requests welcome!
+
+
+## License
+
+Copyright 2014
+<a href="http://www.funkensturm.com">www.funkensturm.com</a>, released
+under the *MIT/X11 license*, which is free for all to do whatever you
+want with it.
