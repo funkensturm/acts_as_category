@@ -36,8 +36,8 @@ subchild2.ancestors_count   # => 2
 root.children.first.children.first # => subchild1
 ```
 
-(Note that the _counts are cached in the database, so, unlike their .count equivalents,
-do not need to be calculated at run-time with multiple database calls.
+Note that unlike their .count equivalents, the _counts methods are cached in the database,
+so do not need to be determined through multiple database calls.
 
 
 ##Features
@@ -65,13 +65,13 @@ Existing solutions have various shortcomings, so acts\_as\_category aims to impr
 -   It is well commented and documented so that Rails beginners will
     learn from it or easily make changes
 -   I18n localization for individual error messages
--   A full unit test comes along with it
--   All options (e.g. database field names)
-    highly configurable via a simple hash
+-   A full unit test is included
+-   All options (e.g. database field names, sort order)
+    configurable via a simple hash
 
 What can acts\_as\_category not do?
 
--   You can’t simply “turn off” the caching
+-   You can’t easily turn off the caching
 -   ActiveRecord’s “find” method won’t respect the hidden categories
     feature (but an alternative method called `get` is provided)
 -   `update` and `update_attributes` must not be used to change the
@@ -111,9 +111,10 @@ Of course you can add arbitrary fields like `name`, `description`, etc.
             t.boolean :hidden
 
             # Optional
-            t.string :name, :description
             t.integer :position, :pictures_count
 
+            # Model specific
+            t.string :name, :description
           end
         end
         def self.down
@@ -121,10 +122,7 @@ Of course you can add arbitrary fields like `name`, `description`, etc.
         end
       end
 
-Notice that the mandatory table names above are needed by default (i.e.
-`parent_id`, `children_count`, `ancestors_count`, `descendants_count`,
-`hidden`). To make it work, you need to call `acts_as_category` in the
-corresponding ActiveRecord model:
+Next, call `acts_as_category` in the corresponding ActiveRecord model:
 
       class Category < ActiveRecord::Base
         acts_as_category
