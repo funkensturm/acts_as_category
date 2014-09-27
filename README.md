@@ -36,7 +36,7 @@ subchild2.ancestors_count   # => 2
 root.children.first.children.first # => subchild1
 ```
 
-(Note that the _counts are cached in the database so, unlike their .count equivalents,
+(Note that the _counts are cached in the database, so, unlike their .count equivalents,
 do not need to be calculated at run-time with multiple database calls.
 
 
@@ -86,10 +86,10 @@ What can acts\_as\_category not do?
 
 ## Installation
 
-Add 'gem **acts\_as\_category**' to the Gemfile in
+Add `gem acts\_as\_category` to the Gemfile in
 your Rails application.
 
-'bundle install`
+`bundle install`
 
 To run the **Unit Test** that comes with this plugin, please read the
 instructions in `acts_as_category/test/category_test.rb`.
