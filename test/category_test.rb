@@ -18,24 +18,24 @@ require File.join File.dirname(__FILE__), 'test_helper'
 # –––––––––––––––
 
 class Category < ActiveRecord::Base
-  acts_as_category :foreign_key => 'my_parent_id',
-                   :position => 'my_position',
-                   :order_by => 'my_position',
-                   :hidden => 'my_hidden',
-                   :children_count => 'my_children_count',
-                   :ancestors_count => 'my_ancestors_count',
-                   :descendants_count => 'my_descendants_count',
-                   :counts_readonly => true
+  acts_as_category  foreign_key:       'my_parent_id',
+                    position:          'my_position',
+                    order_by:          'my_position',
+                    hidden:            'my_hidden',
+                    children_count:    'my_children_count',
+                    ancestors_count:   'my_ancestors_count',
+                    descendants_count: 'my_descendants_count',
+                    counts_readonly:    true
 end
 
 class UnpositionedCategory < ActiveRecord::Base
-  acts_as_category :foreign_key => 'my_parent_id',
-                   :order_by => 'id DESC',
-                   :hidden => 'my_hidden',
-                   :children_count => 'my_children_count',
-                   :ancestors_count => 'my_ancestors_count',
-                   :descendants_count => 'my_descendants_count',
-                   :counts_readonly => true
+  acts_as_category  foreign_key:       'my_parent_id',
+                    order_by:          'id DESC',
+                    hidden:            'my_hidden',
+                    children_count:    'my_children_count',
+                    ancestors_count:   'my_ancestors_count',
+                    descendants_count: 'my_descendants_count',
+                    counts_readonly:    true
 end
 
 class CategoryTest < MiniTest::Unit::TestCase
@@ -76,11 +76,11 @@ class CategoryTest < MiniTest::Unit::TestCase
   end
 
   def check_cache # This is a helper used by a few tests
-    Category.find(:all).each { |c|
+    Category.find(:all).each do |c|
       # Note that "children_count" is a built-in Rails functionality and thus must not be tested here
       assert_equal c.ancestors.size,   c.my_ancestors_count
       assert_equal c.descendants.size, c.my_descendants_count
-    }
+    end
   end
 
   def test_cache_columns
