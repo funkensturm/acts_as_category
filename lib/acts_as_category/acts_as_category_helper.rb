@@ -14,13 +14,13 @@ module ActsAsCategoryHelper
   def aac_select(roots, options = {})
 
     config = {
-        :id          => 'category_select',
-        :name        => 'category',
-        :class       => 'category_select',
-        :selected    => '',
-        :parents_nil => false,
-        :option_all  => false,
-        :option_nil  => false
+        id:          'category_select',
+        name:        'category',
+        class:       'category_select',
+        selected:    '',
+        parents_nil: false,
+        option_all:  false,
+        option_nil:  false
     }
 
     config.update(options) if options.is_a?(Hash)
@@ -45,7 +45,7 @@ module ActsAsCategoryHelper
     id = (!category.children.empty? and parents_have_no_id) ? '' : category.id
 
     result = "<option value='#{id}' #{"selected='selected'" if category.id == selected }>"
-    result << '&nbsp;' * 2 * category.ancestors.size
+    result << '&nbsp;' * 2 * category.ancestors_count
     result << h(category.name)
     result << '</option>'
 
@@ -70,16 +70,16 @@ module ActsAsCategoryHelper
 
 
   def aac_tree_category(category)
-    result = '  ' * category.ancestors.count # vanity indentation
+    result = '  ' * category.ancestors_size # vanity indentation
     result << "<ul>\n"
-    result << '  ' * (category.ancestors.count + 1)
+    result << '  ' * (category.ancestors_size + 1)
     result << '<li>' << link_to(h(category.name), category)
-    result << '  ' * (category.ancestors.count + 1)
+    result << '  ' * (category.ancestors_size + 1)
     result << "</li>\n"
     unless category.children.empty?
       category.children.each { |child| result << aac_tree_category(child) }
     end
-    result << '  ' * category.ancestors.count
+    result << '  ' * category.ancestors_size
     result << "</ul>\n"
   end
   private :aac_tree_category
@@ -92,10 +92,10 @@ module ActsAsCategoryHelper
   def aac_rights_tree(all_categories, options = {})
 
     config = {
-        :matrix           => false,
-        :url              => {},
-        :update           => 'tree_rights_remote',
-        :deactivate_links => false
+      :matrix           => false,
+      :url              => {},
+      :update           => 'tree_rights_remote',
+      :deactivate_links => false
     }
 
     config.update(options) if options.is_a?(Hash)
@@ -152,10 +152,10 @@ module ActsAsCategoryHelper
     raise "Model '#{model.to_s}' does not acts_as_category" unless model.respond_to?(:acts_as_category)
 
     config = {
-        :url => {:controller => :funkenadmin, :action => :categories},
-        :column => 'name',
-        :edit_url => {:controller => :funkenadmin, :action => :categories},
-        :edit_link => '-o-'
+        url:       {:controller => :funkenadmin, :action => :categories},
+        column:    'name',
+        edit_url:  {:controller => :funkenadmin, :action => :categories},
+        edit_link: '-o-'
     }
 
     config.update(options) if options.is_a?(Hash)

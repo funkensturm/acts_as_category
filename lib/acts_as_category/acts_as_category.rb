@@ -1,5 +1,3 @@
-require 'acts_as_category/version'
-
 module ActsAsCategory
 
   # –––––––––––

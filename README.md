@@ -8,7 +8,8 @@
 in the style of acts\_as\_tree, but with a number of additional features, and several convenient view helpers.
 
 
-## Example
+## Examples
+###(See below for complete list of optinod
 
 ```ruby
 class Category < ActiveRecord::Base
@@ -209,6 +210,9 @@ RDoc.
 
       root1.root?         # Returns true, because root is a root category
       child1.root?        # Returns false
+
+      subchild4.root      # Returns root1 because root1 is the root category.
+      root1.root          # Returns root1 (itself) for the same reason.
 
       child1.parent       # Returns root
       root.parent         # Returns nil, because root has no parent
