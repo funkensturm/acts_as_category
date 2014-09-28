@@ -184,7 +184,7 @@ the
 file to change this.
 
 
-### Tutorial
+### Supported methods
 
 If everything is set up, you can actually use the plugin. Let’s say you
 have trees like this and your model is called **Category**.
@@ -227,7 +227,8 @@ RDoc.
       subchild1.descendants     # Returns an empty array [], because it has none
 
       root1.siblings                # Returns an array with all siblings [root2]
-      root1.siblings_ids            # Returns an array with all siblings ids    [5]
+      root1.has_siblings?           # Returns true (Also .siblings? is an alias)
+      root1.siblings_ids            # Returns an array with all siblings ids [5]
       child1.siblings               # Returns an empty array [], because it has no siblings
 
       subchild1.self_and_siblings     # Returns an array [subchild1, subchild2], just like siblings, only with itself as well
@@ -322,7 +323,7 @@ You get the idea. Please notice, that it is assumed that every tree is
 in one scope anyway! So `children` has nothing to do with scope, it
 simply returns the children.
 
-#Add AJAX positioning for ordering
+###Add AJAX positioning for ordering
 
 **WARNING:** This is not tested on scopes yet! If you
 `has_many :categories` you might not be able to use this.

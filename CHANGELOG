@@ -2,6 +2,7 @@
 
 - Convert acts_as_category plugin to Gem
 - Add memoist gem to replace deprecated Rails memoize
+- Move to MiniTest
 - Add siblings_ids method & tests
 - Convert README.doc to markdown
 - Some documentation updates and additions

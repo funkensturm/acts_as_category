@@ -438,12 +438,28 @@ class CategoryTest < MiniTest::Unit::TestCase
     assert_equal [], @n221.siblings_ids
   end
 
+  def test_has_siblings?
+    refute @n11.has_siblings?
+    assert @n21.has_siblings?
+  end
+
+  def test_siblings?
+    refute @n11.siblings?
+    assert @n21.siblings?
+  end
+
+  def test_has_siblings_permissions
+    assert @n2.update_attribute('my_hidden', true)
+    refute @n21.has_siblings?
+    assert @n2.update_attribute('my_hidden', false)
+  end
+
   def test_siblings_permissions
     assert @n2.update_attribute('my_hidden', true)
     assert_equal [@n3], @n1.siblings
     assert_equal [@n1, @n3], @n2.siblings
     assert_equal [@n1], @n3.siblings
-    assert_equal [], @n11.siblings
+    assert_empty @n11.siblings
     assert_equal [], @n21.siblings
     assert_equal [], @n22.siblings
     assert_equal [], @n111.siblings

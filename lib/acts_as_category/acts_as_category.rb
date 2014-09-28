@@ -351,6 +351,16 @@ module ActsAsCategory
       self_and_siblings - [self]
     end
 
+    # Returns true if the current node has siblings, respecting permitted/hidden categories
+    def has_siblings?
+      siblings = self_and_siblings - [self]
+      !siblings.empty?
+    end
+
+    def siblings?
+      has_siblings?
+    end
+
     # Returns ids of all siblings of the current node, respecting permitted/hidden categories
     def siblings_ids
       self_and_siblings_ids - [self.id]
