@@ -222,6 +222,11 @@ class CategoryTest < MiniTest::Unit::TestCase
     refute @n221.has_children?
   end
 
+  def test_is_childless?
+    refute @n22.is_childless?
+    assert @n221.is_childless?
+  end
+
   def test_has_siblings_permissions
     assert @n221.update_attribute('my_hidden', true)
     refute @n22.has_children?
@@ -252,6 +257,18 @@ class CategoryTest < MiniTest::Unit::TestCase
     assert_equal [@n221.id], @n22.children_ids
     assert_equal [], @n211.children_ids
     assert_equal [], @n221.children_ids
+  end
+
+  def test_child_ids
+    assert_equal [@n11.id], @n1.child_ids
+    assert_equal [@n21.id, @n22.id], @n2.child_ids
+    assert_equal [], @n3.child_ids
+    assert_equal [@n111.id], @n11.child_ids
+    assert_equal [], @n111.children_ids
+    assert_equal [@n211.id], @n21.child_ids
+    assert_equal [@n221.id], @n22.child_ids
+    assert_equal [], @n211.child_ids
+    assert_equal [], @n221.child_ids
   end
 
   def test_children_ids_with_permissions
@@ -462,6 +479,11 @@ class CategoryTest < MiniTest::Unit::TestCase
   def test_has_siblings?
     refute @n11.has_siblings?
     assert @n21.has_siblings?
+  end
+
+  def test_only_child?
+    assert @n11.only_child?
+    refute @n21.only_child?
   end
 
   def test_has_siblings_permissions

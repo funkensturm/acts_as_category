@@ -295,9 +295,14 @@ module ActsAsCategory
       self.children.each { |child| children_ids << child.id if child.permitted? } unless self.children.empty?
       children_ids
     end
+    alias_method :child_ids, :children_ids
 
     def has_children?
         !self.children.empty?
+    end
+
+    def is_childless?
+      !has_children?
     end
 
     # Returns list of ancestors, disregarding any permissions
@@ -353,10 +358,7 @@ module ActsAsCategory
     def root?
       self.parent ? false : true
     end
-
-    def is_root?
-      root?
-    end
+    alias_method :is_root?, :root?
 
     # Returns all siblings of the current node, respecting permitted/hidden categories
     def siblings
@@ -368,6 +370,11 @@ module ActsAsCategory
       siblings = self_and_siblings - [self]
       !siblings.empty?
     end
+
+    def is_only_child?
+      !has_siblings?
+    end
+    alias_method :only_child?, :is_only_child?
 
     # Returns ids of all siblings of the current node, respecting permitted/hidden categories
     def siblings_ids

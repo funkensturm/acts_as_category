@@ -1,5 +1,5 @@
 #ActsAsCategory
-[![Build Status](https://secure.travis-ci.org/mbrookes/acts_as_category.svg?branch=master)](http://travis-ci.org/mbrookes/acts_as_tree)
+[![Build Status](https://secure.travis-ci.org/mbrookes/acts_as_category.svg?branch=master)](http://travis-ci.org/mbrookes/acts_as_category)
 [![Gem Version](https://badge.fury.io/rb/acts_as_category.svg)](http://badge.fury.io/rb/acts_as_category)
 
       acts_as_category (Version 2.0 beta)
@@ -228,8 +228,9 @@ RDoc.
   root1.parent         # Returns nil, because root has no parent
 
   child1.children      # Returns an array with [subchild1, subchild2]
-  child1.children_ids  # Returns the same array, but ids instead of categories [3, 4]
-  child1.children?     # Returns true as child1 has children
+  child1.child_ids     # Returns the same array, but ids instead of categories [3, 4]
+  child1.has_children? # Returns true as child1 has children
+  child1.is_childless? # Returns false as child1 has children
 
   subchild1.ancestors      # Returns an array with [child1, root1]
   subchild1.ancestors_ids  # Returns the same array, but ids instead of categories [2, 1]
@@ -241,6 +242,7 @@ RDoc.
 
   root1.siblings           # Returns an array with all siblings [root2]
   root1.has_siblings?      # Returns true
+  child1.is_only_child?    # Returns true (alias .only_child?)
   root1.siblings_ids       # Returns an array with all siblings ids [5]
   child1.siblings          # Returns an empty array [], because it has no siblings
 
