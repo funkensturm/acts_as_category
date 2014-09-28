@@ -1,11 +1,11 @@
 #ActsAsCategory
-[![Build Status](https://secure.travis-ci.org/mbrookes/acts_as_category.svg?branch=master)](http://travis-ci.org/mbrookes/acts\_as\_tree)
-[![Gem Version](https://badge.fury.io/rb/acts_as_category.svg)](http://badge.fury.io/rb/acts\_as\_category)
+[![Build Status](https://secure.travis-ci.org/mbrookes/acts_as_category.svg?branch=master)](http://travis-ci.org/mbrookes/acts_as_tree)
+[![Gem Version](https://badge.fury.io/rb/acts_as_category.svg)](http://badge.fury.io/rb/acts_as_category)
 
       acts_as_category (Version 2.0 beta)
 
-**acts\_as\_category**, is an acts\_as plugin for Ruby on Rails ActiveRecord models
-in the style of acts\_as\_tree, but with a number of additional features, and several convenient view helpers.
+**acts_as_category**, is an acts_as plugin for Ruby on Rails ActiveRecord models
+in the style of acts_as_tree, but with a number of additional features, and several convenient view helpers.
 
 
 ## Examples
@@ -16,37 +16,35 @@ class Category < ActiveRecord::Base
   acts_as_category
 end
 
-root      = Category.create(name: 'Root')
-child1    = Category.create(name: 'Child 1', parent_id: root.id)
-child2    = Category.create(name: 'Child 2', parent_id: root.id)
+root1     = Category.create(name: 'Root 1')
+child1    = Category.create(name: 'Child 1', parent_id: root1.id)
+child2    = Category.create(name: 'Child 2', parent_id: root1.id)
 subchild1 = Category.create(name: 'Subchild 1', parent_id: child1.id)
 subchild2 = Category.create(name: 'Subchild 2', parent_id: child1.id)
 
-root.parent                 # => nil
-child1.parent               # => root
+root1.parent                # => nil
+child1.parent               # => root1
 
-root.children               # => [child1, child2]
-root.children_count         # => 2
+root1.children              # => [child1, child2]
+root1.children_count        # => 2
 
-root.descendants            # => [child1, child2, subchild1, subchild2]
-root.descendants_count      # => 4
+root1.descendants           # => [child1, child2, subchild1, subchild2]
+root1.descendants_count     # => 4
 
-subchild2.ancestors         # => [child1, root]
+subchild2.ancestors         # => [child1, root1]
 subchild2.ancestors_count   # => 2
-
-root.children.first.children.first # => subchild1
 ```
 
-Note that unlike their .count equivalents, the _counts methods are cached in the database,
+Note that unlike their `.count` equivalents, the `_count` methods are cached in the database,
 so do not need to be determined through multiple database calls.
 
 
 ##Features
 
-Existing solutions have various shortcomings, so acts\_as\_category aims to improve on those. This is what it offers:
+Existing solutions have various shortcomings, so acts_as_category aims to improve on those. This is what it offers:
 
 -   It provides a structure for infinite categories and their
-    subcategories (similar to acts\_as\_tree)
+    subcategories (similar to acts_as_tree)
 -   Each user can have his own set of category trees using the
     `:scope` feature
 -   It validates that no category will be the parent of its own
@@ -70,13 +68,13 @@ Existing solutions have various shortcomings, so acts\_as\_category aims to impr
 -   All options (e.g. database field names, sort order)
     configurable via a simple hash
 
-What can acts\_as\_category not do?
+What can acts_as_category not do?
 
 -   You can’t easily turn off the caching
 -   ActiveRecord’s “find” method won’t respect the hidden categories
     feature (but an alternative method called `get` is provided)
 -   `update` and `update_attributes` must not be used to change the
-    parent\_id, because there is no validation callback
+    parent_id, because there is no validation callback
 -   It can’t make you a coffee :)
 
 
@@ -87,7 +85,7 @@ What can acts\_as\_category not do?
 
 ## Installation
 
-Add `gem acts\_as\_category` to the Gemfile in
+Add `gem acts_as_category` to the Gemfile in
 your Rails application.
 
 `bundle install`
@@ -98,7 +96,7 @@ instructions in `acts_as_category/test/category_test.rb`.
 
 ##Usage
 
-###Including acts\_as\_category in your model
+###Including acts_as_category in your model
 
 First of all you need a database table which looks something like this.
 Of course you can add arbitrary fields like `name`, `description`, etc.
@@ -164,7 +162,7 @@ different scopes, whereas the children or a category will assumably have
 the same scope).
 
 
-###Including acts\_as\_category\_content in your model
+###Including acts_as_category_content in your model
 
 `acts_as_category` provides a function called `.permitted?` to find out
 whether a category is visible according to the current user permissions.
@@ -193,8 +191,8 @@ have trees like this and your model is called **Category**.
 
       root1                   root2
        \_ child1               \_ child2
-            \_ subchild1            \subchild3
-            \_ subchild2                \subchild4
+           \_ subchild1            \_subchild3
+           \_ subchild2            \_subchild4
 
 Then you can run the following methods. For more specific information
 about return values, please look at the HTML documentation generated by
@@ -246,9 +244,9 @@ Sets child1 and subchild1 to be hidden, they are now invisible to
 everyone
 
       root1
-       \_ child1             (hidden)
-            \_ subchild1     (hidden)
-            \_ subchild2     (can't be found either, because child1 is hidden)
+       \_ child1           (hidden)
+           \_ subchild1    (hidden)
+           \_ subchild2    (can't be found either, because child1 is hidden)
 
 Your tree will look like this to the world:
 
@@ -265,23 +263,23 @@ whenever a user logs in).
 Internally this is the structure of the tree:
 
       root1
-       \_ child1            (still hidden, but you have permissions now)
-            \_ subchild1    (still hidden to you)
-            \_ subchild2
+       \_ child1           (still hidden, but you have permissions now)
+           \_ subchild1    (still hidden to you)
+           \_ subchild2
 
 If you try to access it, it will look like this:
 
       root1
        \_ child1
-            \_ subchild2
+           \_ subchild2
 
       root1.permitted?      # Returns true, because root1 is not hidden
       child1.permitted?     # Returns true, because it's hidden but you have permissions
       subchild1.permitted?  # Returns false, because it inherits "hiddenness" by child1 and you have no explicit rights for subchild1
       subchild2.permitted?  # Returns true, because it's not hidden and you have permissions for child1
 
-Respectively, using acts\_as\_content you will be able to use the same
-function on a model which belongs\_to a category:
+Respectively, using acts_as_content you will be able to use the same
+function on a model which belongs_to a category:
 
       picture_of_child1.permitted?    # Returns the same thing as child1.permitted?
 
@@ -324,15 +322,15 @@ simply returns the children.
 **WARNING:** This is not tested on scopes yet! If you
 `has_many :categories` you might not be able to use this.
 
-Let’s say you have a gallery and use acts\_as\_category on your
+Let’s say you have a gallery and use acts_as_category on your
 categories. Then the categories will not be ordered by name (unless you
 want them to), but by a individual order. For this we have the position
 column. If the `:position` parameter refers to a non-existent column,
 this feature is simply disabled.
 
 You can manually update these positions, but I strongly recommend to let
-this be done by the sortable\_category helper and the
-Category.update\_positions(params) method like so:
+this be done by the sortable_category helper and the
+Category.update_positions(params) method like so:
 
 In your layout, make sure that you have all the JavaScripts included,
 that will allow drag and drop with JQuery, etc. For the
@@ -356,8 +354,8 @@ Finally, in your controller create an action method like this:
 And you can already try it. You can change the URL to that action method
 like this:
 
-      <%= aac_sortable_tree(Category, {:action => :update_positions}) %>
-      <%= aac_sortable_tree(Category, {:controller => :mycontroller, :action => :update_positions}) %>
+      <%= aac_sortable_tree(Category, {action: :update_positions}) %>
+      <%= aac_sortable_tree(Category, {controller: :mycontroller, action: :update_positions}) %>
 
 
 ##FAQ
