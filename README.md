@@ -227,7 +227,7 @@ RDoc.
       subchild1.descendants     # Returns an empty array [], because it has none
 
       root1.siblings                # Returns an array with all siblings [root2]
-      root1.siblings_ids            # Returns an array with all siblings ids [5]
+      root1.siblings_ids            # Returns an array with all siblings ids    [5]
       child1.siblings               # Returns an empty array [], because it has no siblings
 
       subchild1.self_and_siblings     # Returns an array [subchild1, subchild2], just like siblings, only with itself as well
@@ -278,7 +278,7 @@ If you try to access it, it will look like this:
 
       root1.permitted?      # Returns true, because root1 is not hidden
       child1.permitted?     # Returns true, because it's hidden but you have permissions
-      subchild1.permitted?  # Returns false, because it inherits "hiddenness" by child1 and you have no explicit rights for subchild1
+      subchild1.permitted?  # Returns false, because it inherits "hiddeness" by child1 and you have no explicit rights for subchild1
       subchild2.permitted?  # Returns true, because it's not hidden and you have permissions for child1
 
 Respectively, using acts_as_content you will be able to use the same
@@ -292,10 +292,11 @@ unless you really have to. Here is an alternative method to pick a
 permitted category directly:
 
       child1.children     # Returns only subchild1
-      Category.get(4)     # Returns an empty array, trying to access forbidden subchild2
+      Category.get(4)     # Returns an ActiveRecord::RecordNotFound error,
+                            trying to access forbidden subchild2
 
 Please have a look at the comments for each function and the unit test
-to see, which method respects permissions and which one doesn’t (e.g.
+to see, which method respects permissions and which ones don’t (e.g.
 ancestors).
 
 
@@ -304,8 +305,8 @@ ancestors).
 If you are using something, which `has_many` categories, like so:
 
       class ScopedCategory < ActiveRecord::Base
-        belongs_to :catalogue
-        acts_as_category :scope => :catalogue
+        belongs_to :catalog
+        acts_as_category :scope => :catalog
       end
 
 You can easily use `:scope` to let `acts_as_category` respect that.
@@ -363,10 +364,10 @@ like this:
 
 ##FAQ
 
-**Why is *find* not respecting hidden?**
+**Why is `find` not respecting hidden?**
 
 I didn’t feel comfortable overwriting the find method for Categories and
-it is not really needed.
+it is not really needed (use `get` instead).
 
 **Why are `ancestors`, `ancestors_ids` and `self.parent` not respecting
 hidden/permissions?**
