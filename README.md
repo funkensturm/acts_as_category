@@ -369,14 +369,14 @@ In your layout, make sure that you have all the JavaScripts included,
 that will allow drag and drop with JQuery, etc. For the
 beginning, let’s just add all:
 
-```ruby
+```haml
   <%= javascript_include_tag :all %>
 ```
 Then, in your view, you can call this little helper to generate a drag
 and drop list where you can re-sort the positions. Remember to provide
 the name of the model to use:
 
-```ruby
+```haml
   <%= aac_sortable_tree Category %>
 ```
 Finally, in your controller create an action method like this:
@@ -391,7 +391,7 @@ Finally, in your controller create an action method like this:
 And you can already try it. You can change the URL to that action method
 like this:
 
-```ruby
+```haml
   <%= aac_sortable_tree(Category, {action: :update_positions}) %>
   <%= aac_sortable_tree(Category, {controller: :mycontroller, action: :update_positions}) %>
 ```
