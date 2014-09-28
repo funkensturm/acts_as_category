@@ -296,6 +296,10 @@ module ActsAsCategory
       children_ids
     end
 
+    def has_children?
+        !self.children.empty?
+    end
+
     # Returns list of ancestors, disregarding any permissions
     def ancestors
       node, nodes = self, []
@@ -311,6 +315,10 @@ module ActsAsCategory
         nodes << node.id
       end
       nodes
+    end
+
+    def depth
+      self.class.find(self.id).read_attribute(ancestors_count_column)
     end
 
     # Returns list of descendants, respecting permitted/hidden categories
@@ -346,6 +354,10 @@ module ActsAsCategory
       self.parent ? false : true
     end
 
+    def is_root?
+      root?
+    end
+
     # Returns all siblings of the current node, respecting permitted/hidden categories
     def siblings
       self_and_siblings - [self]
@@ -355,10 +367,6 @@ module ActsAsCategory
     def has_siblings?
       siblings = self_and_siblings - [self]
       !siblings.empty?
-    end
-
-    def siblings?
-      has_siblings?
     end
 
     # Returns ids of all siblings of the current node, respecting permitted/hidden categories

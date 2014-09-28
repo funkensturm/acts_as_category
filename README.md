@@ -218,34 +218,41 @@ RDoc.
 (For the rest let’s assume that `root1 = Category.get(1)`, etc…)
 
 ```ruby
-  root1.root?         # Returns true, because root is a root category
-  child1.root?        # Returns false
+  root1.root?          # Returns true, because root is a root category (Also aliased as .is_root?)
+  child1.root?         # Returns false
 
-  subchild4.root      # Returns root1 because root1 is the root category
-  root1.root          # Returns root1 (itself) for the same reason
+  subchild4.root       # Returns root1 because root1 is the root category
+  root1.root           # Returns root1 (itself) for the same reason
 
-  child1.parent       # Returns root
-  root1.parent        # Returns nil, because root has no parent
+  child1.parent        # Returns root
+  root1.parent         # Returns nil, because root has no parent
 
-  child1.children     # Returns an array with [subchild1, subchild2]
-  child1.children_ids # Returns the same array, but ids instead of categories [3, 4]
+  child1.children      # Returns an array with [subchild1, subchild2]
+  child1.children_ids  # Returns the same array, but ids instead of categories [3, 4]
+  child1.children?     # Returns true as child1 has children
 
-  subchild1.ancestors       # Returns an array with [child1, root1]
-  subchild1.ancestors_ids   # Returns the same array, but ids instead of categories [2, 1]
-  root1.ancestors           # Returns an empty array [], because root has none
+  subchild1.ancestors      # Returns an array with [child1, root1]
+  subchild1.ancestors_ids  # Returns the same array, but ids instead of categories [2, 1]
+  root1.ancestors          # Returns an empty array [], because root has none
 
-  root1.descendants         # Returns an array with [child1, subchild1, subchild2]
-  root1.descendants_ids     # Returns the same array, but ids instead of categories [2, 3, 4]
-  subchild1.descendants     # Returns an empty array [], because it has none
+  root1.descendants        # Returns an array with [child1, subchild1, subchild2]
+  root1.descendants_ids    # Returns the same array, but ids instead of categories [2, 3, 4]
+  subchild1.descendants    # Returns an empty array [], because it has none
 
-  root1.siblings                # Returns an array with all siblings [root2]
-  root1.has_siblings?           # Returns true (Also .siblings? is an alias)
-  root1.siblings_ids            # Returns an array with all siblings ids [5]
-  child1.siblings               # Returns an empty array [], because it has no siblings
+  root1.siblings           # Returns an array with all siblings [root2]
+  root1.has_siblings?      # Returns true
+  root1.siblings_ids       # Returns an array with all siblings ids [5]
+  child1.siblings          # Returns an empty array [], because it has no siblings
 
   subchild1.self_and_siblings     # Returns an array [subchild1, subchild2], just like siblings, only with itself as well
   subchild1.self_and_siblings_ids # Returns the same array, but ids instead of categories [3, 4]
   child1.self_and_siblings        # Returns an array with [child1], because it has no siblings
+
+  root1.children_count       # Returns 1 as root has one immediate child
+  root1.descendants_count    # Returns 3 as root has three descendants
+  subchild1.ancestors_count  # Returns 2 as subchild1 has two ancestors - child1 and root
+  root.depth                 # Returns 0 - roots are at level 0
+  subchild2.depth            # Returns 2
 ```
 
 ### Permissions

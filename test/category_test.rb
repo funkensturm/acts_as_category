@@ -217,6 +217,17 @@ class CategoryTest < MiniTest::Unit::TestCase
     assert_equal [], @n221.children
   end
 
+  def test_has_children?
+    assert @n22.has_children?
+    refute @n221.has_children?
+  end
+
+  def test_has_siblings_permissions
+    assert @n221.update_attribute('my_hidden', true)
+    refute @n22.has_children?
+    assert @n221.update_attribute('my_hidden', false)
+  end
+
   def test_children_with_permissions
     assert @n22.update_attribute('my_hidden', true)
     assert_equal [@n21, @n22], @n2.orig_children
@@ -315,6 +326,10 @@ class CategoryTest < MiniTest::Unit::TestCase
     assert_equal [@n22.id, @n2.id], @n221.ancestors_ids
   end
 
+  def test_depth
+    assert_equal 2, @n111.depth
+  end
+
   def test_descendants
     assert_equal [@n11, @n111], @n1.descendants
     assert_equal [@n21, @n211, @n22, @n221], @n2.descendants
@@ -389,7 +404,13 @@ class CategoryTest < MiniTest::Unit::TestCase
   def test_root?
     assert @n1.root?
     assert @n3.root?
-    assert !@n11.root?
+    refute @n11.root?
+  end
+
+  def test_is_root?
+    assert @n1.is_root?
+    assert @n3.is_root?
+    refute @n11.is_root?
   end
 
   def test_root_question_for_instance_with_permissions # should ignore permissions
@@ -441,11 +462,6 @@ class CategoryTest < MiniTest::Unit::TestCase
   def test_has_siblings?
     refute @n11.has_siblings?
     assert @n21.has_siblings?
-  end
-
-  def test_siblings?
-    refute @n11.siblings?
-    assert @n21.siblings?
   end
 
   def test_has_siblings_permissions
