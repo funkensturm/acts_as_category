@@ -157,35 +157,44 @@ module ActsAsCategory
             # Please refer to the helper methods that came with this model for further information.
             #
             def self.update_positions(params)
-              params.each_key { |key|
+              params.each_key do |key|
                 if key.include?('aac_sortable_tree_')
                   parent_id = key.split('_').last.to_i
-                  params[key].each_with_index { |id, position|
+
+                  params[key].each_with_index do |id, position|
                     category = find(id)
+
                     # Verify that every category is valid and from the correct parent
-                    raise ArgumentError, 'Invalid attempt to update a category position: Cannot update a category (ID '+category.id.to_s+') out of given parent_id (ID '+parent_id.to_s+')' unless category.#{options[:foreign_key]}.nil? && parent_id == 0 || parent_id > 0 && category.#{options[:foreign_key]} == parent_id
+                    unless category.#{options[:foreign_key]}.nil? && parent_id == 0 || parent_id > 0 && category.#{options[:foreign_key]} == parent_id
+                        raise ArgumentError, 'Invalid attempt to update a category position: Cannot update a category (ID '+category.id.to_s+') out of given parent_id (ID '+parent_id.to_s+')'
+                    end
+
                     @counter = position + 1
-                  }
+                  end
+
                   self_and_siblings_count = parent_id <= 0 ? roots.size : find(parent_id).children.count
+
                   # Verify that the parameters correspond to every child of this parent
                   raise ArgumentError, 'Invalid attempt to update a category position: Number of category IDs in param hash is wrong ('+@counter.to_s+' instead of '+self_and_siblings_count.to_s+' for parent with ID '+parent_id.to_s+')' unless @counter == self_and_siblings_count
+
                   # Do the actual position update
                   params[key].each_with_index { |id, position| find(id).update_attribute('#{options[:position]}', position + 1)}
-                  end
-              }
+                end
+              end
               rescue ActiveRecord::RecordNotFound
               raise ArgumentError, 'Invalid attempt to update a category position: Parent category does not exist'
             end
 
-            # Updating all category positions into correct 1, 2, 3 etc. per hierachy level
+            # Updating all category positions into correct 1, 2, 3 etc. per hierarchy level
             #
             def self.refresh_positions(categories = nil)
               categories = roots.all if categories.blank?
               categories = [categories] unless categories.is_a? Array
-              categories.each_with_index { |category, position|
+
+              categories.each_with_index do |category, position|
                 category.update_attribute('#{options[:position]}', position + 1)
                 refresh_positions(category.children) unless category.children.empty?
-              }
+              end
             end
 
             # This will actually include the InstanceMethods to your model

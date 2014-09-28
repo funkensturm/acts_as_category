@@ -215,20 +215,22 @@ RDoc.
       child1.parent       # Returns root
       root1.parent        # Returns nil, because root has no parent
 
-      root1.children      # Returns an array with [subchild1, subchild2]
+      child1.children     # Returns an array with [subchild1, subchild2]
+      child1.children_ids # Returns the same array, but ids instead of categories [3, 4]
 
       subchild1.ancestors       # Returns an array with [child1, root1]
-      subchild1.ancestors_ids   # Returns the same array, but ids instead of categories [2,1]
+      subchild1.ancestors_ids   # Returns the same array, but ids instead of categories [2, 1]
       root1.ancestors           # Returns an empty array [], because root has none
 
       root1.descendants         # Returns an array with [child1, subchild1, subchild2]
-      root1.descendants_ids     # Returns the same array, but ids instead of categories [2,3,4]
+      root1.descendants_ids     # Returns the same array, but ids instead of categories [2, 3, 4]
       subchild1.descendants     # Returns an empty array [], because it has none
 
       root1.siblings                # Returns an array with all siblings [root2]
       child1.siblings               # Returns an empty array [], because it has no siblings
-      subchild1.self_and_siblings   # Returns an array [subchild1, subchild2], just like siblings, only with itself as well
 
+      subchild1.self_and_siblings     # Returns an array [subchild1, subchild2], just like siblings, only with itself as well
+      subchild1.self_and_siblings_ids # Returns the same array, but ids instead of categories [3, 4]
 
 ### Usage with permissions
 
