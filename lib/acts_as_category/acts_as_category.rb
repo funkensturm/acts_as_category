@@ -44,13 +44,24 @@ module ActsAsCategory
 
       # Load default options whenever acts_as_category is called.
       # After that, overwrite them with the individual settings passed by <tt>params</tt>.
-      options = { :foreign_key => 'parent_id', :position => 'position', :order_by => 'position', :hidden => 'hidden', :scope => '1 = 1', :children_count => 'children_count', :ancestors_count => 'ancestors_count', :descendants_count => 'descendants_count', :counts_readonly => false }
+      options = {
+          foreign_key:        'parent_id',
+          position:           'position',
+          order_by:           'position',
+          hidden:             'hidden',
+          scope:              '1 = 1',
+          children_count:     'children_count',
+          ancestors_count:    'ancestors_count',
+          descendants_count:  'descendants_count',
+          counts_readonly:    false
+      }
+
       options.update(params) if params.is_a?(Hash)
 
       # Create a class association to itself.
       # Note that subcategories will be destroyed whenever a parent is deleted.
-      belongs_to :parent, :class_name => name, :foreign_key => options[:foreign_key], :counter_cache => options[:children_count]
-      has_many :children, :class_name => name, :foreign_key => options[:foreign_key], :order => options[:order_by], :dependent => :destroy
+      belongs_to :parent, class_name: name, foreign_key: options[:foreign_key], counter_cache: options[:children_count]
+      has_many :children, class_name: name, foreign_key: options[:foreign_key], order: options[:order_by], dependent: :destroy
 
       # Substantial validations
       before_validation           :validate_foreign_key

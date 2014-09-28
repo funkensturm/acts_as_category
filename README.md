@@ -9,7 +9,7 @@ in the style of acts\_as\_tree, but with a number of additional features, and se
 
 
 ## Examples
-###(See below for complete list of optinod
+###See [Usage](https://github.com/mbrookes/acts_as_category#usage) for a complete list of instance methods and view helpers
 
 ```ruby
 class Category < ActiveRecord::Base
