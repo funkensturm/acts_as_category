@@ -184,7 +184,7 @@ the
 file to change this.
 
 
-## Tutorial
+### Tutorial
 
 If everything is set up, you can actually use the plugin. Let’s say you
 have trees like this and your model is called **Category**.
@@ -204,7 +204,7 @@ RDoc.
       Category.roots      # Returns an array with all permitted root categories [root1, root2]
       Category.roots!     # Same thing, but returns roots regardless of permissions (see further below)
 
-(For the rest let’s assume, that root1 = Category.get(1), etc…)
+(For the rest let’s assume that `root1 = Category.get(1)`, etc…)
 
       root1.root?         # Returns true, because root is a root category
       child1.root?        # Returns false
@@ -232,6 +232,7 @@ RDoc.
 
       subchild1.self_and_siblings     # Returns an array [subchild1, subchild2], just like siblings, only with itself as well
       subchild1.self_and_siblings_ids # Returns the same array, but ids instead of categories [3, 4]
+      child1.self_and_siblings        # Returns an array with [child1], because it has no siblings
 
 ### Usage with permissions
 
