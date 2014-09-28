@@ -1,6 +1,6 @@
 #ActsAsCategory
 [![Build Status](https://secure.travis-ci.org/mbrookes/acts_as_category.svg?branch=master)](http://travis-ci.org/mbrookes/acts_as_tree)
-[![Coverage](https://coveralls.io/repos/mbrookes/acts_as_tree/badge.png)]([https://coveralls.io/r/mbrookes/acts_as_tree)
+[![Coverage](https://coveralls.io/repos/mbrookes/acts_as_tree/badge.png)](https://coveralls.io/r/mbrookes/acts_as_tree)
 [![Gem Version](https://badge.fury.io/rb/acts_as_category.svg)](http://badge.fury.io/rb/acts_as_category)
 
       acts_as_category (Version 2.0 beta)
