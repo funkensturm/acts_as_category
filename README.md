@@ -227,6 +227,7 @@ RDoc.
       subchild1.descendants     # Returns an empty array [], because it has none
 
       root1.siblings                # Returns an array with all siblings [root2]
+      root1.siblings_ids            # Returns an array with all siblings ids [5]
       child1.siblings               # Returns an empty array [], because it has no siblings
 
       subchild1.self_and_siblings     # Returns an array [subchild1, subchild2], just like siblings, only with itself as well

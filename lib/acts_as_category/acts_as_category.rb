@@ -353,6 +353,13 @@ module ActsAsCategory
       result
     end
 
+    # Returns all ids of siblings of the current node, respecting permitted/hidden categories
+    def siblings_ids
+      result = self_and_siblings_ids - [self.id]
+      result.delete_if { |sibling| !self.class.find(sibling).permitted? }
+      result
+    end
+
     # Returns all siblings and a reference to the current node, respecting permitted/hidden categories
     def self_and_siblings
       parent ? parent.children : self.class.roots.manual_scope(self)
