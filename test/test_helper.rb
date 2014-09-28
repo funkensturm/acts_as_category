@@ -10,6 +10,8 @@ require 'minitest/autorun'
 require 'rubygems'
 require 'active_record'
 require 'action_view'
+require 'coveralls'
+Coveralls.wear!
 
 # –––––––––––––––––––––––––––
 # Virtual Database connection

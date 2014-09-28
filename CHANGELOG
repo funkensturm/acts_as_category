@@ -1,9 +1,10 @@
 *2.0 beta (Sep 28 2014)*
 
 - Convert acts_as_category plugin to Gem
-- Add sibling_ids method & tests
+- Add memoist gem to replace deprecated Rails memoize
+- Add siblings_ids method & tests
 - Convert README.doc to markdown
-- Some document updates and additions
+- Some documentation updates and additions
 
 *2.0 alpha*
 
