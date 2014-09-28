@@ -9,7 +9,7 @@ in the style of acts_as_tree, but with a number of additional features, and seve
 
 
 ## Examples
-###See [Usage](https://github.com/mbrookes/acts_as_category#usage) for a complete list of instance methods and view helpers
+(See [Usage](https://github.com/mbrookes/acts_as_category#usage) for a complete list of instance methods and view helpers.)
 
 ```ruby
 class Category < ActiveRecord::Base
