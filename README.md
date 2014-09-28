@@ -243,7 +243,7 @@ RDoc.
   root1.siblings           # Returns an array with all siblings [root2]
   root1.has_siblings?      # Returns true
   child1.is_only_child?    # Returns true (alias .only_child?)
-  root1.siblings_ids       # Returns an array with all siblings ids [5]
+  root1.sibling_ids        # Returns an array with all siblings ids [5]
   child1.siblings          # Returns an empty array [], because it has no siblings
 
   subchild1.self_and_siblings     # Returns an array [subchild1, subchild2], just like siblings, only with itself as well

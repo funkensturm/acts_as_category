@@ -89,13 +89,13 @@ class CategoryTest < MiniTest::Unit::TestCase
 
   def test_permissions_class_variable
     Category.permissions = nil
-    assert_equal [], Category.permissions
+    assert_empty Category.permissions
     Category.permissions = [nil]
-    assert_equal [], Category.permissions
+    assert_empty Category.permissions
     Category.permissions = [0]
-    assert_equal [], Category.permissions
+    assert_empty Category.permissions
     Category.permissions = 'string'
-    assert_equal [], Category.permissions
+    assert_empty Category.permissions
     Category.permissions = [1]
     assert_equal [1], Category.permissions
     Category.permissions = [1,2,3]
@@ -103,7 +103,7 @@ class CategoryTest < MiniTest::Unit::TestCase
     Category.permissions = [1,'string',3]
     assert_equal [1,3], Category.permissions
     Category.permissions.clear
-    assert_equal [], Category.permissions
+    assert_empty Category.permissions
   end
 
   def test_attr_readonly
@@ -153,11 +153,11 @@ class CategoryTest < MiniTest::Unit::TestCase
   def test_permitted?
     assert @n3.permitted?
     assert @n3.update_attribute('my_hidden', true)
-    assert !@n3.permitted?
+    refute @n3.permitted?
     Category.permissions = [@n3.id]
     assert @n3.permitted?
     Category.permissions.clear
-    assert !@n3.permitted?
+    refute @n3.permitted?
     assert @n3.update_attribute('my_hidden', false)
     assert @n3.permitted?
     assert @n2.permitted?
@@ -166,7 +166,7 @@ class CategoryTest < MiniTest::Unit::TestCase
     assert @n211.update_attribute('my_hidden', true)
     assert @n2.permitted?
     assert @n21.permitted?
-    assert !@n211.permitted?
+    refute @n211.permitted?
     Category.permissions = [@n211.id]
     assert @n2.permitted?
     assert @n21.permitted?
@@ -175,16 +175,16 @@ class CategoryTest < MiniTest::Unit::TestCase
     Category.permissions = [99]
     assert @n2.permitted?
     assert @n21.permitted?
-    assert !@n211.permitted?
+    refute @n211.permitted?
     assert @n211.update_attribute('my_hidden', false)
     assert @n2.permitted?
     assert @n21.permitted?
     assert @n211.permitted?
     assert @n21.update_attribute('my_hidden', true)
     assert @n2.permitted?
-    assert !@n21.permitted?
-    assert !@n211.my_hidden
-    assert !@n211.permitted?
+    refute @n21.permitted?
+    refute @n211.my_hidden
+    refute @n211.permitted?
     Category.permissions = [@n21.id]
     assert @n2.permitted?
     assert @n21.permitted?
@@ -192,13 +192,13 @@ class CategoryTest < MiniTest::Unit::TestCase
     Category.permissions.clear
     assert @n2.update_attribute('my_hidden', true)
     assert @n21.update_attribute('my_hidden', false)
-    assert !@n2.permitted?
-    assert !@n21.permitted?
-    assert !@n211.permitted?
+    refute @n2.permitted?
+    refute @n21.permitted?
+    refute @n211.permitted?
     Category.permissions = [@n21.id, @n211.id]
-    assert !@n2.permitted?
-    assert !@n21.permitted?
-    assert !@n211.permitted?
+    refute @n2.permitted?
+    refute @n21.permitted?
+    refute @n211.permitted?
     Category.permissions = [@n2.id]
     assert @n2.permitted?
     assert @n21.permitted?
@@ -208,13 +208,13 @@ class CategoryTest < MiniTest::Unit::TestCase
   def test_children
     assert_equal [@n11], @n1.children
     assert_equal [@n21, @n22], @n2.children
-    assert_equal [], @n3.children
+    assert_empty @n3.children
     assert_equal [@n111], @n11.children
-    assert_equal [], @n111.children
+    assert_empty @n111.children
     assert_equal [@n211], @n21.children
     assert_equal [@n221], @n22.children
-    assert_equal [], @n211.children
-    assert_equal [], @n221.children
+    assert_empty @n211.children
+    assert_empty @n221.children
   end
 
   def test_has_children?
@@ -227,7 +227,7 @@ class CategoryTest < MiniTest::Unit::TestCase
     assert @n221.is_childless?
   end
 
-  def test_has_siblings_permissions
+  def test_has_children_permissions
     assert @n221.update_attribute('my_hidden', true)
     refute @n22.has_children?
     assert @n221.update_attribute('my_hidden', false)
@@ -238,50 +238,50 @@ class CategoryTest < MiniTest::Unit::TestCase
     assert_equal [@n21, @n22], @n2.orig_children
     assert_equal [@n11], @n1.children
     assert_equal [@n21], @n2.children
-    assert_equal [], @n3.children
+    assert_empty @n3.children
     assert_equal [@n111], @n11.children
-    assert_equal [], @n111.children
+    assert_empty @n111.children
     assert_equal [@n211], @n21.children
-    assert_equal [], @n22.children
-    assert_equal [], @n211.children
-    assert_equal [], @n221.children
+    assert_empty @n22.children
+    assert_empty @n211.children
+    assert_empty @n221.children
   end
 
   def test_children_ids
     assert_equal [@n11.id], @n1.children_ids
     assert_equal [@n21.id, @n22.id], @n2.children_ids
-    assert_equal [], @n3.children_ids
+    assert_empty @n3.children_ids
     assert_equal [@n111.id], @n11.children_ids
-    assert_equal [], @n111.children_ids
+    assert_empty @n111.children_ids
     assert_equal [@n211.id], @n21.children_ids
     assert_equal [@n221.id], @n22.children_ids
-    assert_equal [], @n211.children_ids
-    assert_equal [], @n221.children_ids
+    assert_empty @n211.children_ids
+    assert_empty @n221.children_ids
   end
 
   def test_child_ids
     assert_equal [@n11.id], @n1.child_ids
     assert_equal [@n21.id, @n22.id], @n2.child_ids
-    assert_equal [], @n3.child_ids
+    assert_empty @n3.child_ids
     assert_equal [@n111.id], @n11.child_ids
-    assert_equal [], @n111.children_ids
+    assert_empty @n111.children_ids
     assert_equal [@n211.id], @n21.child_ids
     assert_equal [@n221.id], @n22.child_ids
-    assert_equal [], @n211.child_ids
-    assert_equal [], @n221.child_ids
+    assert_empty @n211.child_ids
+    assert_empty @n221.child_ids
   end
 
   def test_children_ids_with_permissions
     assert @n22.update_attribute('my_hidden', true)
     assert_equal [@n11.id], @n1.children_ids
     assert_equal [@n21.id], @n2.children_ids
-    assert_equal [], @n3.children_ids
+    assert_empty @n3.children_ids
     assert_equal [@n111.id], @n11.children_ids
-    assert_equal [], @n111.children_ids
+    assert_empty @n111.children_ids
     assert_equal [@n211.id], @n21.children_ids
-    assert_equal [], @n22.children_ids
-    assert_equal [], @n211.children_ids
-    assert_equal [], @n221.children_ids
+    assert_empty @n22.children_ids
+    assert_empty @n211.children_ids
+    assert_empty @n221.children_ids
   end
 
    def test_children_size
@@ -320,9 +320,9 @@ class CategoryTest < MiniTest::Unit::TestCase
   end
 
   def test_ancestors
-    assert_equal [], @n1.ancestors
-    assert_equal [], @n2.ancestors
-    assert_equal [], @n3.ancestors
+    assert_empty @n1.ancestors
+    assert_empty @n2.ancestors
+    assert_empty @n3.ancestors
     assert_equal [@n1], @n11.ancestors
     assert_equal [@n2], @n21.ancestors
     assert_equal [@n2], @n22.ancestors
@@ -332,9 +332,9 @@ class CategoryTest < MiniTest::Unit::TestCase
   end
 
   def test_ancestors_ids
-    assert_equal [], @n1.ancestors_ids
-    assert_equal [], @n2.ancestors_ids
-    assert_equal [], @n3.ancestors_ids
+    assert_empty @n1.ancestors_ids
+    assert_empty @n2.ancestors_ids
+    assert_empty @n3.ancestors_ids
     assert_equal [@n1.id], @n11.ancestors_ids
     assert_equal [@n2.id], @n21.ancestors_ids
     assert_equal [@n2.id], @n22.ancestors_ids
@@ -350,54 +350,54 @@ class CategoryTest < MiniTest::Unit::TestCase
   def test_descendants
     assert_equal [@n11, @n111], @n1.descendants
     assert_equal [@n21, @n211, @n22, @n221], @n2.descendants
-    assert_equal [], @n3.descendants
+    assert_empty @n3.descendants
     assert_equal [@n111], @n11.descendants
     assert_equal [@n211], @n21.descendants
     assert_equal [@n221], @n22.descendants
-    assert_equal [], @n111.descendants
-    assert_equal [], @n211.descendants
-    assert_equal [], @n221.descendants
+    assert_empty @n111.descendants
+    assert_empty @n211.descendants
+    assert_empty @n221.descendants
   end
 
   def test_descendants_with_permissions
     assert @n22.update_attribute('my_hidden', true)
     assert_equal [@n11, @n111], @n1.descendants
     assert_equal [@n21, @n211], @n2.descendants
-    assert_equal [], @n3.descendants
+    assert_empty @n3.descendants
     assert_equal [@n111], @n11.descendants
-    assert_equal [], @n111.descendants
+    assert_empty @n111.descendants
     assert_equal [@n211], @n21.descendants
-    assert_equal [], @n22.descendants
-    assert_equal [], @n211.descendants
-    assert_equal [], @n221.descendants
+    assert_empty @n22.descendants
+    assert_empty @n211.descendants
+    assert_empty @n221.descendants
   end
 
   def test_descendants_ids
     assert_equal [@n11.id, @n111.id], @n1.descendants_ids
     assert_equal [@n21.id, @n211.id, @n22.id, @n221.id], @n2.descendants_ids
-    assert_equal [], @n3.descendants_ids
+    assert_empty @n3.descendants_ids
     assert_equal [@n111.id], @n11.descendants_ids
     assert_equal [@n211.id], @n21.descendants_ids
     assert_equal [@n221.id], @n22.descendants_ids
     assert_equal [@n221.id], @n22.descendants_ids
     assert_equal [@n221.id], @n22.descendants_ids
-    assert_equal [], @n111.descendants_ids
-    assert_equal [], @n211.descendants_ids
-    assert_equal [], @n221.descendants_ids
-    assert_equal [], @n221.descendants_ids
+    assert_empty @n111.descendants_ids
+    assert_empty @n211.descendants_ids
+    assert_empty @n221.descendants_ids
+    assert_empty @n221.descendants_ids
   end
 
   def test_descendants_ids_with_permissions
     assert @n22.update_attribute('my_hidden', true)
     assert_equal [@n11.id, @n111.id], @n1.descendants_ids
     assert_equal [@n21.id, @n211.id], @n2.descendants_ids
-    assert_equal [], @n3.descendants_ids
+    assert_empty @n3.descendants_ids
     assert_equal [@n111.id], @n11.descendants_ids
-    assert_equal [], @n111.descendants_ids
+    assert_empty @n111.descendants_ids
     assert_equal [@n211.id], @n21.descendants_ids
-    assert_equal [], @n22.descendants_ids
-    assert_equal [], @n211.descendants_ids
-    assert_equal [], @n221.descendants_ids
+    assert_empty @n22.descendants_ids
+    assert_empty @n211.descendants_ids
+    assert_empty @n221.descendants_ids
   end
 
   def test_root_of_instance
@@ -434,7 +434,7 @@ class CategoryTest < MiniTest::Unit::TestCase
     assert @n3.update_attribute('my_hidden', true)
     assert @n1.root?
     assert @n3.root?
-    assert !@n11.root?
+    refute @n11.root?
   end
 
   def test_roots_and_forced_roots
@@ -456,24 +456,36 @@ class CategoryTest < MiniTest::Unit::TestCase
     assert_equal [@n2, @n3], @n1.siblings
     assert_equal [@n1, @n3], @n2.siblings
     assert_equal [@n1, @n2], @n3.siblings
-    assert_equal [], @n11.siblings
+    assert_empty @n11.siblings
     assert_equal [@n22], @n21.siblings
     assert_equal [@n21], @n22.siblings
-    assert_equal [], @n111.siblings
-    assert_equal [], @n211.siblings
-    assert_equal [], @n221.siblings
+    assert_empty @n111.siblings
+    assert_empty @n211.siblings
+    assert_empty @n221.siblings
   end
 
   def test_siblings_ids
     assert_equal [@n2.id, @n3.id], @n1.siblings_ids
     assert_equal [@n1.id, @n3.id], @n2.siblings_ids
     assert_equal [@n1.id, @n2.id], @n3.siblings_ids
-    assert_equal [], @n11.siblings_ids
+    assert_empty @n11.siblings_ids
     assert_equal [@n22.id], @n21.siblings_ids
     assert_equal [@n21.id], @n22.siblings_ids
-    assert_equal [], @n111.siblings_ids
-    assert_equal [], @n211.siblings_ids
-    assert_equal [], @n221.siblings_ids
+    assert_empty @n111.siblings_ids
+    assert_empty @n211.siblings_ids
+    assert_empty @n221.siblings_ids
+  end
+
+  def test_sibling_ids
+    assert_equal [@n2.id, @n3.id], @n1.sibling_ids
+    assert_equal [@n1.id, @n3.id], @n2.sibling_ids
+    assert_equal [@n1.id, @n2.id], @n3.sibling_ids
+    assert_empty @n11.sibling_ids
+    assert_equal [@n22.id], @n21.sibling_ids
+    assert_equal [@n21.id], @n22.sibling_ids
+    assert_empty @n111.sibling_ids
+    assert_empty @n211.sibling_ids
+    assert_empty @n221.sibling_ids
   end
 
   def test_has_siblings?
@@ -498,19 +510,19 @@ class CategoryTest < MiniTest::Unit::TestCase
     assert_equal [@n1, @n3], @n2.siblings
     assert_equal [@n1], @n3.siblings
     assert_empty @n11.siblings
-    assert_equal [], @n21.siblings
-    assert_equal [], @n22.siblings
-    assert_equal [], @n111.siblings
-    assert_equal [], @n211.siblings
-    assert_equal [], @n221.siblings
+    assert_empty @n21.siblings
+    assert_empty @n22.siblings
+    assert_empty @n111.siblings
+    assert_empty @n211.siblings
+    assert_empty @n221.siblings
     assert @n22.update_attribute('my_hidden', true)
-    assert_equal [], @n21.siblings
-    assert_equal [], @n22.siblings
-    assert_equal [], @n111.siblings
-    assert_equal [], @n211.siblings
-    assert_equal [], @n221.siblings
+    assert_empty @n21.siblings
+    assert_empty @n22.siblings
+    assert_empty @n111.siblings
+    assert_empty @n211.siblings
+    assert_empty @n221.siblings
     assert @n2.update_attribute('my_hidden', false)
-    assert_equal [], @n22.siblings
+    assert_empty @n22.siblings
   end
 
   def test_self_and_siblings
@@ -535,7 +547,7 @@ class CategoryTest < MiniTest::Unit::TestCase
     assert_equal [@n21], @n22.self_and_siblings
     assert_equal [@n111], @n111.self_and_siblings
     assert_equal [@n211], @n211.self_and_siblings
-    assert_equal [], @n221.self_and_siblings
+    assert_empty @n221.self_and_siblings
   end
 
   def test_dependent_destroy_and_cache
@@ -614,29 +626,29 @@ class CategoryTest < MiniTest::Unit::TestCase
   end
 
   def test_invalid_parent_id_type
-    assert !Category.new(:my_parent_id => 0.0).save
-    assert !Category.new(:my_parent_id => 1.5).save
-    assert !Category.new(:my_parent_id => 0).save
-    assert !Category.new(:my_parent_id => 'string').save
+    refute Category.new(:my_parent_id => 0.0).save
+    refute Category.new(:my_parent_id => 1.5).save
+    refute Category.new(:my_parent_id => 0).save
+    refute Category.new(:my_parent_id => 'string').save
   end
 
   def test_non_existent_foreign_key
-    assert !Category.new(:my_parent_id => 9876543210).save
+    refute Category.new(:my_parent_id => 9876543210).save
     assert_raises(ActiveRecord::RecordInvalid) { Category.create!(:my_parent_id => 9876543210) }
   end
 
   def test_category_becomes_its_own_parent
-    assert !@n1.update_attributes(:my_parent_id => @n1.id)
+    refute @n1.update_attributes(:my_parent_id => @n1.id)
     assert @n2.my_parent_id = @n2.id
-    assert !@n2.save
+    refute @n2.save
   end
 
   def test_category_becomes_parent_of_descendant
-    assert !@n1.update_attributes(:my_parent_id => @n11.id)
-    assert !@n1.update_attributes(:my_parent_id => @n111.id)
-    assert !@n11.update_attributes(:my_parent_id => @n111.id)
+    refute @n1.update_attributes(:my_parent_id => @n11.id)
+    refute @n1.update_attributes(:my_parent_id => @n111.id)
+    refute @n11.update_attributes(:my_parent_id => @n111.id)
     assert @n2.my_parent_id = @n21.id
-    assert !@n2.save
+    refute @n2.save
   end
 
   def test_update_positions # should ignore permissions, by the way
@@ -651,7 +663,7 @@ class CategoryTest < MiniTest::Unit::TestCase
     assert_raises(::ArgumentError) { Category.update_positions({ "aac_sortable_tree_#{@n2.id}" => [@n1.id, @n2.id, @n3.id] }) }
     assert_raises(::ArgumentError) { Category.update_positions({ "aac_sortable_tree_#{@n2.id}" => [@n21.id, @n22.id, @n111.id] }) }
     assert_raises(::ArgumentError) { Category.update_positions({ 'aac_sortable_tree_9876543210' => [1] }) }
-    assert_raises(::ArgumentError) { Category.update_positions({ "aac_sortable_tree_1" => [9876543210] }) }
+    assert_raises(::ArgumentError) { Category.update_positions({ 'aac_sortable_tree_1' => [9876543210] }) }
   end
 
   def test_roots_order

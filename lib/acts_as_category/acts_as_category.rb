@@ -304,6 +304,7 @@ module ActsAsCategory
     def is_childless?
       !has_children?
     end
+    alias_method :childless?, :is_childless?
 
     # Returns list of ancestors, disregarding any permissions
     def ancestors
@@ -370,6 +371,7 @@ module ActsAsCategory
       siblings = self_and_siblings - [self]
       !siblings.empty?
     end
+    alias_method :siblings?, :has_siblings?
 
     def is_only_child?
       !has_siblings?
@@ -380,6 +382,7 @@ module ActsAsCategory
     def siblings_ids
       self_and_siblings_ids - [self.id]
     end
+    alias_method :sibling_ids, :siblings_ids
 
     # Returns all siblings and a reference to the current node, respecting permitted/hidden categories
     def self_and_siblings
@@ -390,6 +393,7 @@ module ActsAsCategory
     def self_and_siblings_ids
       parent ? parent.children_ids : self.class.roots.manual_scope(self).map {|x| x.id}
     end
+    alias_method :self_and_sibling_ids, :self_and_siblings_ids
 
     # Immediately refresh cache of category instance
     def refresh_cache
