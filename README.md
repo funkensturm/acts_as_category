@@ -84,13 +84,15 @@ What can acts_as_category not do?
 
 ## Installation
 
-Add `gem acts_as_category, github: 'funkensturm/acts_as_category` to the Gemfile in
-your Rails application.
+Add: 
+```ruby
+gem acts_as_category, github: 'funkensturm/acts_as_category
+```
+to the Gemfile in your Rails application.
 
 `bundle install`
 
-To run the **Unit Test** that comes with this plugin, please read the
-instructions in `acts_as_category/test/category_test.rb`.
+To run the **Unit Test** that comes with this plugin, please read the instructions in `acts_as_category/test/category_test.rb`.
 
 
 ##Usage
