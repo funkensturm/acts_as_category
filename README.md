@@ -1,5 +1,5 @@
 #ActsAsCategory
-[![Build Status](https://secure.travis-ci.org/funkensturm/acts_as_category.svg?branch=master)](http://travis-ci.org/mbrookes/acts_as_category)
+[![Build Status](https://secure.travis-ci.org/funkensturm/acts_as_category.svg?branch=master)](http://travis-ci.org/funkensturm/acts_as_category)
 
       acts_as_category (Version 2.0 beta)
 
