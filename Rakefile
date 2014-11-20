@@ -1,6 +1,8 @@
+require 'bundler/gem_tasks'
+
 require 'rake'
 require 'rake/testtask'
-require 'rake/rdoctask'
+require 'rdoc/task'
 
 desc 'Default: run unit tests.'
 task :default => :test
@@ -13,7 +15,7 @@ Rake::TestTask.new(:test) do |t|
 end
 
 desc 'Generate documentation for the acts_as_category plugin.'
-Rake::RDocTask.new(:rdoc) do |rdoc|
+RDoc::Task.new do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title    = 'ActsAsCategory'
   rdoc.options << '--line-numbers' << '--inline-source'
