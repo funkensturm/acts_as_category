@@ -43,38 +43,38 @@ so do not need to be determined through multiple database calls.
 Existing solutions have various shortcomings, so acts_as_category aims to improve on those. This is what it offers:
 
 -   It provides a structure for infinite categories and their
-    subcategories (similar to acts_as_tree)
+    subcategories (similar to acts_as_tree).
 -   Each user can have his own set of category trees using the
-    `:scope` feature
+    `:scope` feature.
 -   It validates that no category will be the parent of its own
-    descendant and all other variations of this
+    descendant and all other variations of this.
 -   You can define which hidden categories should still be permitted to
     the current user (through a simple class variable, thus it can
-    easily be set per user)
+    easily be set per user).
 -   There is a variety of instance methods such as `ancestors`,
     `descendants`, `descendants_ids`, `root?`, etc.
 -   It has view helpers to create menus, select boxes, drag and drop
     ajax lists, etc.
 -   It optionally provides sorting by a position column per hierarchy
     level, including administration methods that take parameters from
-    the helpers
+    the helpers.
 -   There are automatic cache columns for children, ancestors and
-    descendants (good for fast menu output)
+    descendants (good for fast menu output).
 -   It is well commented and documented so that Rails beginners will
-    learn from it or easily make changes
+    learn from it or easily make changes.
 -   I18n localization for individual error messages
--   A full unit test is included
+-   A full unit test is included.
 -   All options (e.g. database field names, sort order)
-    configurable via a simple hash
+    configurable via a simple hash.
 
 What can acts_as_category not do?
 
--   You can’t easily turn off the caching
+-   You can’t easily turn off the caching.
 -   ActiveRecord’s “find” method won’t respect the hidden categories
-    feature (but an alternative method called `get` is provided)
+    feature (but an alternative method called `get` is provided).
 -   `update` and `update_attributes` must not be used to change the
-    parent_id, because there is no validation callback
--   It can’t make you a coffee :)
+    parent_id, because there is no validation callback.
+-   It can’t make you a coffee. :)
 
 
 ## Requirements
