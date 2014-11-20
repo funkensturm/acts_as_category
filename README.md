@@ -62,7 +62,7 @@ Existing solutions have various shortcomings, so acts_as_category aims to improv
     descendants (good for fast menu output).
 -   It is well commented and documented so that Rails beginners will
     learn from it or easily make changes.
--   I18n localization for individual error messages
+-   I18n localization for individual error messages.
 -   A full unit test is included.
 -   All options (e.g. database field names, sort order)
     configurable via a simple hash.
