@@ -1,6 +1,5 @@
 #ActsAsCategory
-[![Build Status](https://secure.travis-ci.org/mbrookes/acts_as_category.svg?branch=master)](http://travis-ci.org/mbrookes/acts_as_category)
-[![Gem Version](https://badge.fury.io/rb/acts_as_category.svg)](http://badge.fury.io/rb/acts_as_category)
+[![Build Status](https://secure.travis-ci.org/funkensturm/acts_as_category.svg?branch=master)](http://travis-ci.org/mbrookes/acts_as_category)
 
       acts_as_category (Version 2.0 beta)
 
@@ -9,7 +8,7 @@ in the style of acts_as_tree, but with a number of additional features, and seve
 
 
 ## Examples
-(See [Usage](https://github.com/mbrookes/acts_as_category#usage) for a complete list of instance methods and view helpers.)
+(See [Usage](https://github.com/funkensturm/acts_as_category#usage) for a complete list of instance methods and view helpers.)
 
 ```ruby
 class Category < ActiveRecord::Base
@@ -85,7 +84,7 @@ What can acts_as_category not do?
 
 ## Installation
 
-Add `gem acts_as_category` to the Gemfile in
+Add `gem acts_as_category, github: 'funkensturm/acts_as_category` to the Gemfile in
 your Rails application.
 
 `bundle install`
