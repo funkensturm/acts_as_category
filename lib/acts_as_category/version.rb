@@ -1,3 +1,3 @@
 module ActsAsCategory
-  VERSION = '2.0.0-beta'
+  VERSION = '2.0.1'
 end
