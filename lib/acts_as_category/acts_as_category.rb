@@ -280,11 +280,11 @@ module ActsAsCategory
 
     # Returns +true+ if category is visible/permitted, otherwise +false+.
     def permitted?
-      return false if self.class.find(self.id).read_attribute(hidden_column) and !self.class.permissions.include?(self.id)
+      return false if self.class.find(self.id).public_send(hidden_column) and !self.class.permissions.include?(self.id)
       node = self
       while node.parent do
         node = node.parent
-        return false if self.class.find(node.id).read_attribute(hidden_column) and !self.class.permissions.include?(node.id)
+        return false if self.class.find(node.id).public_send(hidden_column) and !self.class.permissions.include?(node.id)
       end
       true
     end
@@ -324,7 +324,7 @@ module ActsAsCategory
     end
 
     def depth
-      self.class.find(self.id).read_attribute(ancestors_count_column)
+      self.class.find(self.id).public_send(ancestors_count_column)
     end
 
     # Returns list of descendants, respecting permitted/hidden categories
@@ -409,25 +409,25 @@ module ActsAsCategory
     # Validator for parent_id association after creation and update of a category
     def validate_foreign_key
       # If there is a parent_id given
-      unless self.read_attribute(parent_id_column).nil?
+      unless self.public_send(parent_id_column).nil?
         # Parent_id must be a valid category ID
-        write_attribute(parent_id_column, 0) if self.read_attribute(parent_id_column) > 0 && !self.class.find(self.read_attribute(parent_id_column))
+        send(self.class.parent_id_column, 0) if self.public_send(parent_id_column) > 0 && !self.class.find(self.public_send(parent_id_column))
         # Parent must not be itself
-        write_attribute(parent_id_column, 0) if self.read_attribute(parent_id_column) > 0 && self.id == self.read_attribute(parent_id_column) unless self.id.blank?
+        send(self.class.parent_id_column, 0) if self.public_send(parent_id_column) > 0 && self.id == self.public_send(parent_id_column) unless self.id.blank?
         # Parent must not be a descendant of itself
-        write_attribute(parent_id_column, 0) if self.read_attribute(parent_id_column) > 0 && self.descendants_ids(true).include?(self.read_attribute(parent_id_column))
+        send(self.class.parent_id_column, 0) if self.public_send(parent_id_column) > 0 && self.descendants_ids(true).include?(self.public_send(parent_id_column))
       end
     rescue ActiveRecord::RecordNotFound
-      write_attribute(parent_id_column, 0) # Parent was not found
+      send(self.class.parent_id_column, 0) # Parent was not found
     end
 
     # Assigns a position integer after creation of a category
     def assign_position
       # Position for new nodes is (number of siblings + 1), but only for new categories
-      if self.read_attribute(parent_id_column).nil?
-        write_attribute(position_column, self.class.roots!.size + 1)
+      if self.public_send(parent_id_column).nil?
+        write_attribute(self.class.position_column, self.class.roots!.size + 1)
       else
-        write_attribute(position_column, self.class.find(:all, :conditions => ["#{parent_id_column} = ?", self.read_attribute(parent_id_column)]).size + 1)
+        write_attribute(self.class.position_column, self.class.find(:all, :conditions => ["#{parent_id_column} = ?", self.public_send(parent_id_column)]).size + 1)
       end
     end
 
@@ -438,13 +438,13 @@ module ActsAsCategory
 
     # Gather parent_id before any manipulation
     def prepare_refresh_before_update
-      @parent_id_before = self.class.find(self.id).read_attribute(parent_id_column)
+      @parent_id_before = self.class.find(self.id).public_send(parent_id_column)
     end
 
     # A category has been manipulated, refresh cache columns
     def refresh_cache_after_update
       # Parent didn't change, do nothing with cache
-      return if @parent_id_before == self.read_attribute(parent_id_column)
+      return if @parent_id_before == self.public_send(parent_id_column)
       # If a subcategory has come from another branch, refresh that tree
       self.class.refresh_cache_of_branch_with(@parent_id_before) unless @parent_id_before.nil? || @parent_id_before == self.root.id
       # Refresh current branch in any case
